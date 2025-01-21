@@ -2,6 +2,7 @@ package com.uicheon
 
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
+import com.uicheon.route.authRouting
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
@@ -17,8 +18,6 @@ import org.jetbrains.exposed.sql.*
 
 fun Application.configureRouting() {
     routing {
-        get("/") {
-            call.respondText("Hello World!")
-        }
+        authRouting()
     }
 }
