@@ -1,6 +1,7 @@
 package com.uicheon.route
 
 import com.uicheon.model.AuthResponse
+import com.uicheon.model.SignInParams
 import com.uicheon.model.SignUpParams
 import com.uicheon.repository.user.UserRepository
 import io.ktor.http.*
@@ -29,9 +30,33 @@ fun Routing.authRouting() {
             val result = repository.signUp(params = params)
             call.respond(
                 status = result.code,
-                message= result.data
+                message = result.data
             )
 
         }
     }
+
+    route(path = "/login") {
+        post {
+            val params = call.receiveNullable<SignInParams>()
+
+            if (params == null) {
+                call.respond(
+                    status = HttpStatusCode.BadRequest,
+                    message = AuthResponse(
+                        errorMessage = "Invalid credentials!"
+                    )
+                )
+                return@post
+            }
+
+            val result = repository.signIn(params = params)
+            call.respond(
+                status = result.code,
+                message = result.data
+            )
+
+        }
+    }
+
 }
