@@ -4,6 +4,7 @@ import com.uicheon.dao.DatabaseFactory.dbQuery
 import com.uicheon.model.SignUpParams
 import com.uicheon.model.User
 import com.uicheon.model.UserRow
+import com.uicheon.security.hashPassword
 import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.insert
@@ -15,7 +16,7 @@ class UserDaoImpl : UserDao {
             val insertStatement = UserRow.insert {
                 it[name] = params.name
                 it[email] = params.email
-                it[password] = params.password
+                it[password] = hashPassword(params.password)
             }
 
             insertStatement.resultedValues?.singleOrNull()?.let {

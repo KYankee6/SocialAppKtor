@@ -1,11 +1,13 @@
 package com.uicheon.repository.user
 
 import com.uicheon.dao.user.UserDao
+import com.uicheon.generateToken
 import com.uicheon.model.AuthResponse
 import com.uicheon.model.AuthResponseData
 import com.uicheon.model.SignInParams
 import com.uicheon.model.SignUpParams
 import com.uicheon.repository.util.Response
+import com.uicheon.security.hashPassword
 import io.ktor.http.*
 
 class UserRepositoryImpl(
@@ -55,14 +57,15 @@ class UserRepositoryImpl(
                 )
             )
         } else {
-            if (user.password == params.password) {
+            val hashedPassword = hashPassword(params.password)
+            if (user.password == hashedPassword) {
                 Response.Success(
                     data = AuthResponse(
                         data = AuthResponseData(
                             id = user.id,
                             name = user.name,
                             bio = user.bio,
-                            token = "Here is your token"
+                            token = generateToken(params.email)
                         )
                     )
                 )
